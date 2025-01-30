@@ -1,0 +1,367 @@
+/* static/css/style.css */
+
+/* General body styles */
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #f4f4f9, #e0e0f0);
+    background: url('texture.png') repeat;
+    background-color: #a2ddb583;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+/* Heading styles */
+h1 {
+    text-align: center;
+    color: #444;
+    margin-top: 20px;
+    font-size: 2.5em;
+}
+
+/* Table styles */
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+table th {
+    background-color: #007BFF;
+    color: white;
+    font-weight: bold;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Add some padding to the page */
+.container {
+    padding: 20px;
+}
+
+/* Add responsive behavior */
+@media (max-width: 600px) {
+    table {
+        width: 100%;
+    }
+}
+
+.media-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.media-container img,
+.media-container video {
+    max-width: 100%;
+    height: auto;
+}
+
+.stadium {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 20px;
+    justify-items: center;
+}
+
+.sector {
+    width: 150px;
+    height: 100px;
+    border: 2px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    text-align: center;
+    border-radius: 8px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.sector-a, .sector-c {
+    background-color: #ffe4e1;
+}
+
+.sector-b, .sector-d {
+    background-color: #e6f7ff;
+}
+
+.sector:hover {
+    background-color: #d1ffd6;
+}
+
+/* Kontener z grafiką boiska i sektorami */
+.stadium-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+/* Grafika boiska */
+.pitch-image {
+    top: -15%;
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Ogólne style dla sektorów */
+.sector {
+    position: absolute;
+    border: 2px solid rgba(0, 0, 0, 0.5);
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 10px;
+    font-size: 1.2rem;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    border-radius: 8px;
+    width: 60px;
+    height: 40px;
+}
+
+.sector-label {
+    display: block;
+    font-weight: bold;
+    font-size: 1rem;
+    color: #333;
+}
+
+.sector-price {
+    display: block;
+    font-size: 0.8rem;
+    color: #555;
+    margin-top: 5px;
+}
+
+/* Pozycjonowanie sektorów */
+.sector-a {
+    top: -15%;    /* Sektor A - nad boiskiem */
+    left: 20%;    /* Dostosuj pozycję w poziomie */
+    width: 60%;   /* Szerokość sektora */
+    height: 10%;  /* Wysokość sektora */
+}
+
+.sector-b {
+    top: 2.5%;     /* Sektor B - po lewej stronie boiska */
+    left: -12.5%;   /* Pozycja na zewnątrz boiska */
+    width: 10%;   /* Szerokość sektora */
+    height: 90%;  /* Wysokość sektora */
+}
+
+.sector-c {
+    top: 2.5%;     /* Sektor C - po prawej stronie boiska */
+    right: -12.5%;  /* Pozycja na zewnątrz boiska */
+    width: 10%;   /* Szerokość sektora */
+    height: 90%;  /* Wysokość sektora */
+}
+
+.sector-d {
+    bottom: -15%; /* Sektor D - pod boiskiem */
+    left: 20%;    /* Dostosuj pozycję w poziomie */
+    width: 60%;   /* Szerokość sektora */
+    height: 10%;  /* Wysokość sektora */
+}
+
+/* Efekt hover */
+.sector:hover {
+    background-color: rgba(200, 200, 255, 0.9);
+    transform: scale(1.05);
+}
+
+/* Kolor dla kolumny "Dostępność" */
+table td:nth-child(3) {
+    background-color: #d4edda;
+    color: #155724;
+    font-weight: bold;
+}
+
+/* Kolor dla pozostałych kolumn */
+table td:not(:nth-child(3)) {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Efekt hover dla wierszy */
+table tr:hover td {
+    background-color: #e2e6ea;
+}
+
+/* Efekt hover dla kolumny "Dostępność" */
+table tr:hover td:nth-child(3) {
+    background-color: #c3e6cb;
+}
+
+/* Kontener z logo */
+.logo-container {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 10%;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.logo {
+    width: 50%;
+    height: auto;
+}
+
+/* Sekcja z partnerami */
+.partners-section {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-top: 2px solid #ddd;
+}
+
+.partners-image {
+    max-width: 80%;
+    height: auto;
+    margin-top: 10px;
+}
+
+css
+Copy
+/* Kontener z wyborem sektora i boiskiem */
+.match-details-container {
+    display: flex; /* Ustawienie flexbox */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    gap: 20px; /* Odstęp między kolumnami */
+}
+
+/* Lewa kolumna: Wybierz sektor */
+.sector-selection {
+    flex: 1; /* Zajmuje 1 część dostępnej przestrzeni */
+    text-align: left; /* Tekst wyrównany do lewej */
+}
+
+/* Prawa kolumna: Boisko i sektory */
+.stadium-container {
+    flex: 2; /* Zajmuje 2 części dostępnej przestrzeni */
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+}
+
+/* Nagłówek "Wybierz sektor" */
+.sector-heading {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Nagłówek z linią oddzielającą */
+.match-header {
+    text-align: center;
+    margin-bottom: 10px;
+    padding: 20px 0;
+}
+
+.match-header h1 {
+    font-style: italic;
+    font-size: 2.5rem;
+    color: #000000;
+    margin-bottom: 10px;
+}
+
+.header-line {
+    width: 50%;
+    height: 4px;
+    background-color: #007BFF;
+    margin: 0 auto;
+}
+
+/* Sekcja z linią i przyciskiem powrotu */
+.footer-section {
+    text-align: center;
+    margin-top: 80px;
+    padding: 20px 0;
+}
+
+.footer-line {
+    top: -10%;
+    width: 50%;
+    height: 4px;
+    background-color: #007BFF;
+    margin: 0 auto 20px;
+}
+
+/* Przycisk powrotu */
+.back-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3f6730;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #0056b3;
+}
+
+/* static/css/style.css */
+
+/* Okno dialogowe */
+.dialog {
+    display: none; /* Domyślnie ukryte */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Półprzezroczyste tło */
+    justify-content: center;
+    align-items: center;
+}
+
+.dialog-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.dialog-content button {
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.dialog-content button:first-child {
+    background-color: #007BFF;
+    color: white;
+}
+
+.dialog-content button:last-child {
+    background-color: #f0f0f0;
+}

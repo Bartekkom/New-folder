@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ ticket.match_name }} - Szczegóły meczu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Kontener z logo -->
+    <div class="logo-container">
+        <img src="{{ url_for('static', filename='images/logo1.png') }}" alt="Logo 1" class="logo">
+        <img src="{{ url_for('static', filename='images/logo2.png') }}" alt="Logo 2" class="logo">
+    </div>
+
+    <!-- Nagłówek z linią oddzielającą -->
+    <div class="match-header">
+        <h1>{{ ticket.match_name }}</h1>
+        <div class="header-line"></div>
+    </div>
+
+    <!-- Kontener z wyborem sektora i boiskiem -->
+    <div class="match-details-container">
+        <!-- Lewa kolumna: Wybierz sektor -->
+        <div class="sector-selection">
+            <h2 class="sector-heading">Wybierz sektor:</h2>
+        </div>
+
+        <!-- Prawa kolumna: Boisko i sektory -->
+        <div class="stadium-container">
+            <img src="{{ url_for('static', filename='images/pitch.jpg') }}" alt="Boisko" class="pitch-image">
+            
+            <!-- Sektor A -->
+            <div class="sector sector-a" onclick="openPaymentDialog('A', {{ price_a }}, {{ ticket.id }})">
+                <span class="sector-label">A</span>
+                <span class="sector-price">{{ price_a }} PLN</span>
+            </div>
+
+            <!-- Sektor B -->
+            <div class="sector sector-b" onclick="openPaymentDialog('B', {{ price_b }}, {{ ticket.id }})">
+                <span class="sector-label">B</span>
+                <span class="sector-price">{{ price_b }} PLN</span>
+            </div>
+
+            <!-- Sektor C -->
+            <div class="sector sector-c" onclick="openPaymentDialog('C', {{ price_c }}, {{ ticket.id }})">
+                <span class="sector-label">C</span>
+                <span class="sector-price">{{ price_c }} PLN</span>
+            </div>
+
+            <!-- Sektor D -->
+            <div class="sector sector-d" onclick="openPaymentDialog('D', {{ price_d }}, {{ ticket.id }})">
+                <span class="sector-label">D</span>
+                <span class="sector-price">{{ price_d }} PLN</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Okno dialogowe do finalizacji płatności -->
+    <div id="payment-dialog" class="dialog">
+        <div class="dialog-content">
+            <h2>Finalizacja płatności</h2>
+            <p id="payment-info"></p>
+            <button onclick="confirmPurchase()">Potwierdź zakup</button>
+            <button onclick="closePaymentDialog()">Anuluj</button>
+        </div>
+    </div>
+
+    <!-- Linia oddzielająca i przycisk powrotu -->
+    <div class="footer-section">
+        <div class="footer-line"></div>
+        <a href="/" class="back-button">Powrót do meczów</a>
+    </div>
+
+    <script>
+        let selectedSector = null;
+        let selectedPrice = null;
+        let selectedTicketId = null;
+
+        // Otwórz okno dialogowe z finalizacją płatności
+        function openPaymentDialog(sector, price, ticketId) {
+            selectedSector = sector;
+            selectedPrice = price;
+            selectedTicketId = ticketId;
+
+            // Wyświetl informacje o płatności
+            document.getElementById('payment-info').innerText = 
+                `Sektor: ${sector}, Cena: ${price} PLN`;
+
+            // Pokaż okno dialogowe
+            document.getElementById('payment-dialog').style.display = 'block';
+        }
+
+        // Zamknij okno dialogowe
+        function closePaymentDialog() {
+            document.getElementById('payment-dialog').style.display = 'none';
+        }
+
+        // Potwierdź zakup
+        function confirmPurchase() {
+            fetch(`/api/tickets/${selectedTicketId}/buy`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Bilet zakupiony pomyślnie!') {
+                    alert('Bilet zakupiony pomyślnie!');
+                    window.location.reload();  // Odśwież stronę, aby zobaczyć zmiany
+                } else {
+                    alert(data.message);  // Wyświetl komunikat o błędzie
+                }
+            })
+            .catch(error => {
+                console.error('Błąd:', error);
+                alert('Wystąpił błąd podczas zakupu biletu.');
+            });
+
+            closePaymentDialog();
+        }
+    </script>
+</body>
+</html>

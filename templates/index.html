@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Biletów</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Kontener z logo -->
+    <div class="logo-container">
+        <img src="{{ url_for('static', filename='images/logo1.png') }}" alt="Logo 1" class="logo">
+        <img src="{{ url_for('static', filename='images/logo2.png') }}" alt="Logo 2" class="logo">
+    </div>
+
+    <h1>Lista dostępnych biletów</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Mecz</th>
+                <th>Cena</th>
+                <th>Dostępność</th>
+                <th>Data</th>
+                <th>Godzina</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in tickets %}
+                <tr>
+                    <td><a href="{{ url_for('match_details', slug=ticket.slug) }}">{{ ticket.match_name }}</a></td>
+                    <td>{{ ticket.price }} PLN</td>
+                    <td>{{ 'Dostępny' if ticket.available_tickets > 0 else 'Wyprzedany' }}</td>
+                    <td>{{ ticket.date.strftime('%d.%m.%Y') }}</td>
+                    <td>{{ ticket.time.strftime('%H:%M') }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Sekcja z partnerami -->
+    <div class="partners-section">
+        <h2>Nasi Partnerzy</h2>
+        <img src="{{ url_for('static', filename='images/partners.png') }}" alt="Partnerzy" class="partners-image">
+    </div>
+</body>
+</html>
