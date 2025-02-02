@@ -30,7 +30,9 @@
                 <tr>
                     <td><a href="{{ url_for('match_details', slug=ticket.slug) }}">{{ ticket.match_name }}</a></td>
                     <td>{{ ticket.price }} PLN</td>
-                    <td>{{ 'Dostępny' if ticket.available_tickets > 0 else 'Wyprzedany' }}</td>
+                    <td style="color: {{ 'black' if ticket.available_tickets <= 0 }}; background-color: {{ 'red' if ticket.available_tickets <= 0 }};">
+                        {{ 'Dostępny' if ticket.available_tickets > 0 else 'Wyprzedany' }}
+                    </td>
                     <td>{{ ticket.date.strftime('%d.%m.%Y') }}</td>
                     <td>{{ ticket.time.strftime('%H:%M') }}</td>
                 </tr>

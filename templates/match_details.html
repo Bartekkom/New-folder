@@ -32,26 +32,22 @@
             
             <!-- Sektor A -->
             <div class="sector sector-a" onclick="openPaymentDialog('A', {{ price_a }}, {{ ticket.id }})">
-                <span class="sector-label">A</span>
-                <span class="sector-price">{{ price_a }} PLN</span>
+                <span class="sector-price">B {{ price_a }} PLN</span>
             </div>
 
             <!-- Sektor B -->
             <div class="sector sector-b" onclick="openPaymentDialog('B', {{ price_b }}, {{ ticket.id }})">
-                <span class="sector-label">B</span>
-                <span class="sector-price">{{ price_b }} PLN</span>
+                <span class="sector-price">A {{ price_b }} PLN</span>
             </div>
 
             <!-- Sektor C -->
             <div class="sector sector-c" onclick="openPaymentDialog('C', {{ price_c }}, {{ ticket.id }})">
-                <span class="sector-label">C</span>
-                <span class="sector-price">{{ price_c }} PLN</span>
+                <span class="sector-price">C {{ price_c }} PLN</span>
             </div>
 
             <!-- Sektor D -->
             <div class="sector sector-d" onclick="openPaymentDialog('D', {{ price_d }}, {{ ticket.id }})">
-                <span class="sector-label">D</span>
-                <span class="sector-price">{{ price_d }} PLN</span>
+                <span class="sector-price">D {{ price_d }} PLN</span>
             </div>
         </div>
     </div>
@@ -66,10 +62,26 @@
         </div>
     </div>
 
-    <!-- Linia oddzielająca i przycisk powrotu -->
+    <!-- Okno dialogowe do weryfikacji biletu -->
+    <div id="verify-dialog" class="dialog">
+        <div class="dialog-content">
+            <h2>Weryfikacja biletu</h2>
+            <p>Wklej kod biletu:</p>
+            <input type="text" id="verify-ticket-code" placeholder="Wpisz kod biletu">
+            <button onclick="verifyTicket()">Zweryfikuj</button>
+            <button onclick="closeVerifyDialog()">Anuluj</button>
+            <p id="verify-result"></p>
+        </div>
+    </div>
+
+    <!-- Linia oddzielająca i przyciski na dole strony -->
     <div class="footer-section">
         <div class="footer-line"></div>
         <a href="/" class="back-button">Powrót do meczów</a>
+    </div>
+
+    <div class="footer-section">
+        <button class="verify-button" onclick="openVerifyDialog()">Zweryfikuj bilet</button>
     </div>
 
     <script>
@@ -107,8 +119,8 @@
             .then(response => response.json())
             .then(data => {
                 if (data.message === 'Bilet zakupiony pomyślnie!') {
-                    alert('Bilet zakupiony pomyślnie!');
-                    window.location.reload();  // Odśwież stronę, aby zobaczyć zmiany
+                    // Wyświetl okno dialogowe z kodem biletu
+                    showTicketCodeDialog(data.ticket_code);
                 } else {
                     alert(data.message);  // Wyświetl komunikat o błędzie
                 }
@@ -117,9 +129,90 @@
                 console.error('Błąd:', error);
                 alert('Wystąpił błąd podczas zakupu biletu.');
             });
-
+        
             closePaymentDialog();
         }
+
+        // Wyświetl okno dialogowe z kodem biletu
+        function showTicketCodeDialog(ticketCode) {
+            const dialogContent = `
+                <h2>Bilet zakupiony pomyślnie!</h2>
+                <p>Twój kod biletu:</p>
+                <input type="text" id="ticket-code-input" value="${ticketCode}" readonly>
+                <button onclick="copyTicketCode()">Kopiuj kod</button>
+                <button onclick="closeTicketCodeDialog()">Zamknij</button>
+            `;
+        
+            // Utwórz nowe okno dialogowe
+            const ticketCodeDialog = document.createElement('div');
+            ticketCodeDialog.id = 'ticket-code-dialog';
+            ticketCodeDialog.className = 'dialog';
+            ticketCodeDialog.innerHTML = dialogContent;
+        
+            // Dodaj okno dialogowe do strony
+            document.body.appendChild(ticketCodeDialog);
+        
+            // Pokaż okno dialogowe
+            ticketCodeDialog.style.display = 'block';
+        }
+        
+        // Kopiuj kod biletu do schowka
+        function copyTicketCode() {
+            const ticketCodeInput = document.getElementById('ticket-code-input');
+            ticketCodeInput.select();
+            document.execCommand('copy');
+            alert('Kod biletu skopiowany do schowka!');
+        }
+        
+        // Zamknij okno dialogowe z kodem biletu
+        function closeTicketCodeDialog() {
+            const ticketCodeDialog = document.getElementById('ticket-code-dialog');
+            if (ticketCodeDialog) {
+                ticketCodeDialog.remove();  // Usuń okno dialogowe z DOM
+            }
+        }
+
+        // Otwórz okno dialogowe do weryfikacji biletu
+        function openVerifyDialog() {
+            document.getElementById('verify-dialog').style.display = 'block';
+        }
+
+        // Zamknij okno dialogowe do weryfikacji biletu
+        function closeVerifyDialog() {
+            document.getElementById('verify-dialog').style.display = 'none';
+        }
+
+        // Zweryfikuj bilet
+        function verifyTicket() {
+            const ticketCode = document.getElementById('verify-ticket-code').value;
+        
+            if (!ticketCode) {
+                alert('Wpisz kod biletu.');
+                return;
+            }
+        
+            fetch('/api/tickets/verify', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ ticket_code: ticketCode }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                const verifyResult = document.getElementById('verify-result');
+                if (data.message === 'Bilet jest ważny.') {
+                    verifyResult.innerText = `Bilet jest ważny.\nMecz: ${data.match_name}, Data: ${data.date}, Godzina: ${data.time}`;
+                } else {
+                    verifyResult.innerText = data.message;
+                }
+            })
+            .catch(error => {
+                console.error('Błąd:', error);
+                alert('Wystąpił błąd podczas weryfikacji biletu.');
+            });
+        }
+
     </script>
 </body>
 </html>

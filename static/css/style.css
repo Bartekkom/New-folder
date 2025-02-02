@@ -137,18 +137,14 @@ table tr:hover {
     height: 40px;
 }
 
-.sector-label {
-    display: block;
-    font-weight: bold;
-    font-size: 1rem;
-    color: #333;
-}
-
 .sector-price {
     display: block;
-    font-size: 0.8rem;
-    color: #555;
+    font-size: 1.2rem;
+    color: #000000;
     margin-top: 5px;
+    font-family: 'Courier New', Courier, monospace;
+    font-style: oblique;
+    font-weight: bold;
 }
 
 /* Pozycjonowanie sektorów */
@@ -268,7 +264,7 @@ Copy
 /* Nagłówek "Wybierz sektor" */
 .sector-heading {
     font-size: 2rem;
-    color: #333;
+    opacity: 0;
     margin-bottom: 20px;
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -293,6 +289,7 @@ Copy
     height: 4px;
     background-color: #007BFF;
     margin: 0 auto;
+    opacity: 0;
 }
 
 /* Sekcja z linią i przyciskiem powrotu */
@@ -308,6 +305,7 @@ Copy
     height: 4px;
     background-color: #007BFF;
     margin: 0 auto 20px;
+    opacity: 0;
 }
 
 /* Przycisk powrotu */
@@ -326,16 +324,29 @@ Copy
     background-color: #0056b3;
 }
 
+.verify-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #830606;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.verify-button:hover {
+    background-color: #0056b3;
+}
+
 /* static/css/style.css */
 
 /* Okno dialogowe */
 .dialog {
     display: none; /* Domyślnie ukryte */
-    position: fixed;
-    top: 0;
-    left: 0;
+    position: bottom;
     width: 100%;
-    height: 100%;
+    height: 20%;
     background-color: rgba(0, 0, 0, 0.5); /* Półprzezroczyste tło */
     justify-content: center;
     align-items: center;
@@ -364,4 +375,60 @@ Copy
 
 .dialog-content button:last-child {
     background-color: #f0f0f0;
+}
+
+/* Okno dialogowe */
+.dialog {
+    display: none; /* Domyślnie ukryte */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px; 
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    text-align: center;
+}
+
+/* Pole tekstowe z kodem biletu */
+#ticket-code-input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+/* Przyciski w oknie dialogowym */
+.dialog button {
+    margin: 5px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.dialog button:first-child {
+    background-color: #007BFF;
+    color: white;
+}
+
+.dialog button:last-child {
+    background-color: #f0f0f0;
+}
+
+#verify-ticket-code {
+    width: 60%; /* Zmniejszenie szerokości o 40% */
+    height: 40px; /* Wysokość pola input */
+    font-size: 16px; /* Rozmiar czcionki */
+    padding: 8px; /* Wewnętrzny odstęp */
+    margin: 0 auto 10px; /* Wycentrowanie i odstęp od kolejnego elementu */
+    display: block; /* Umożliwia wycentrowanie */
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }

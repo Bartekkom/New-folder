@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, jsonify, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date, time
 import uuid
@@ -9,7 +9,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# Model bazy danych
+# Model dla dostępnych biletów
 class Ticket(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     match_name = db.Column(db.String(100), nullable=False)
@@ -18,11 +18,18 @@ class Ticket(db.Model):
     slug = db.Column(db.String(100), unique=True, nullable=False)
     date = db.Column(db.Date, nullable=False)
     time = db.Column(db.Time, nullable=False)
-    is_used = db.Column(db.Boolean, default=False)  # Nowe pole: czy bilet został użyty
-    ticket_code = db.Column(db.String(50), unique=True, nullable=False)  # Unikalny kod biletu
-    
+
     def __repr__(self):
         return f"<Ticket {self.match_name}, Available: {self.available_tickets}>"
+
+# Model dla zakupionych biletów
+class PurchasedTicket(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    ticket_id = db.Column(db.Integer, db.ForeignKey('ticket.id'), nullable=False)  # Powiązanie z Ticket
+    ticket_code = db.Column(db.String(50), unique=True, nullable=False)  # Unikalny kod biletu
+
+    def __repr__(self):
+        return f"<PurchasedTicket {self.ticket_code}>"
 
 @app.route('/')
 def home():
@@ -53,12 +60,20 @@ def match_details(slug):
 def buy_ticket(ticket_id):
     ticket = Ticket.query.get_or_404(ticket_id)
     if ticket.available_tickets > 0:
-        ticket.available_tickets -= 1
-        ticket.ticket_code = str(uuid.uuid4())  # Generuj unikalny kod biletu
+        ticket.available_tickets -= 1  # Zmniejsz liczbę dostępnych biletów
+
+        # Utwórz nowy zakupiony bilet
+        purchased_ticket = PurchasedTicket(
+            ticket_id=ticket.id,
+            ticket_code=str(uuid.uuid4())  # Generuj unikalny kod biletu
+        )
+
+        db.session.add(purchased_ticket)
         db.session.commit()
+
         return jsonify({
             'message': 'Bilet zakupiony pomyślnie!',
-            'ticket_code': ticket.ticket_code,  # Zwróć kod biletu
+            'ticket_code': purchased_ticket.ticket_code,  # Zwróć kod biletu
             'available_tickets': ticket.available_tickets
         })
     else:
@@ -72,17 +87,13 @@ def verify_ticket():
     if not ticket_code:
         return jsonify({'message': 'Brak kodu biletu.'}), 400
 
-    ticket = Ticket.query.filter_by(ticket_code=ticket_code).first()
+    purchased_ticket = PurchasedTicket.query.filter_by(ticket_code=ticket_code).first()
 
-    if not ticket:
+    if not purchased_ticket:
         return jsonify({'message': 'Nieprawidłowy kod biletu.'}), 404
 
-    if ticket.is_used:
-        return jsonify({'message': 'Bilet został już wykorzystany.'}), 400
-
-    # Oznacz bilet jako użyty
-    ticket.is_used = True
-    db.session.commit()
+    # Pobierz informacje o meczu
+    ticket = Ticket.query.get(purchased_ticket.ticket_id)
 
     return jsonify({
         'message': 'Bilet jest ważny.',
